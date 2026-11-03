@@ -59,29 +59,33 @@ pairs are bad. The honest claim is "budget ~15% optimism and rare severe misses"
 not "self-assessment lies" — the earlier 2.06x / 10.4x / r=0.008 numbers were
 artefacts of the leak plus a different scoring protocol and are retired.
 
-## F4 · Cross-conformal calibration restores honest coverage — as an empirical statement
+## F4 · The interval defect is in-sample calibration; several protocols fix it, and the narrowest one is not the split
 
-*(Numbers below are from the leak-free re-run; see F3(a). The conformal validity is
-approximate, not distribution-free: the calibration residuals come from the paired
-standardization population and the test residuals from the target's random holdout,
-which are not the same population. The claim the paper can defend is "empirically
-calibrated on 56 instrument pairs", backed by the split-half control in F10.)*
+Two things were separated by measurement (E3, `e3_protocols.csv`, 54 pairs / 2916 cells,
+nominal 90%):
 
-Final measurement (identical data, three modes):
+| protocol | coverage | width | width vs pooled | effective n_cal |
+|---|---|---|---|---|
+| pooled (in-sample residuals) | 0.838 | 3.80 | 1.00 | 37 |
+| split (disjoint halves) | 0.928 | 7.50 | 1.97 | 18 |
+| cv+ (5-fold cross-conformal) | 0.932 | 5.49 | 1.44 | 37 |
+| **jackknife+ (leave-one-standard-out)** | **0.926** | **5.32** | **1.40** | 37 |
+| 2-fold (roles swapped, pooled residuals) | 0.950 | 6.45 | 1.70 | 37 |
+| Mondrian (per-analyte quantiles) | 0.932 | 5.49 | 1.44 | 37 |
 
-| interval mode | mean coverage @ 0.90 | mean width (glucose, g/L) |
-|---|---|---|
-| pooled (fit and certify on the same standards) | 0.890 | 5.2 |
-| cv+ (cross-conformal, corrected inflation) | 0.866 | 4.8 |
-| **split (fit on half, certify on the other half)** | **0.934** | 7.1 |
+Three conclusions:
 
-The root cause is measurable: the standardization population is systematically easier
-than the target's held-out population, so *any* quantile calibrated on standardization
-residuals inherits optimism — cross-conformal machinery cannot fix a distributional
-mismatch, only sample-size effects. The disjoint split survives because its
-calibration residuals come from an operator fitted on different samples. The paper's
-protocol finding: **reuse the standards and you certify optimism; split them and you
-certify honesty** — at a measurable width cost (5.2 → 7.1 g/L).
+1. **pooled is uniquely bad** (45.5% of cells under-cover). Every out-of-fold protocol
+   reaches roughly nominal coverage. This is the paper's protocol finding.
+2. **split is NOT the best replacement.** It wastes half the standards (n_cal 18 vs 37)
+   and is therefore the WIDEST workable interval (1.97x pooled). Its earlier apparent
+   superiority was the finite-sample ceiling k/(m+1), not a virtue.
+3. **jackknife+ dominates split**: same coverage (0.926 vs 0.928), 29% narrower
+   (5.32 vs 7.50), and it uses every standard sample.
+
+This also validates the corrected mechanism (F3/E4): the defect was in-sample
+optimism, not a "standard samples are easier" distribution mismatch - which is why
+cross-fitting rescues the interval without discarding data.
 
 ## F5 · A transfer-standard budget exists and is measurable (with a survivorship caveat)
 
@@ -106,6 +110,11 @@ that can supply n_std=40 are NOT the easy ones — their mean ratio at n=20 is 2
 1.83 for all pairs (they are the spectroscopically dissimilar Timegate/Metrohm/Tec5/
 Tornado cross-combinations). The n>=40 improvement is therefore a genuine
 sample-size effect on hard pairs, not flattery of easy ones.
+
+**E1 补充（决定性）**：本曲线只与"需要源仪器的迁移方法"比较，**缺少最强合法竞争者**——
+标准样本在目标仪器上有光谱、其参考值 `Ys_std` 又已由源实验室测定，因此可以直接用这 n 条样本
+在目标仪器上训练本地 PLS（B1），同样不增加任何参考测定。若 B1 在某个 n 上不弱于迁移，
+则该 n 处迁移没有价值。交叉点曲线见 `e1_baselines.csv` / `e1_crossover.csv`。
 
 ## F6 · The residual gap is partly irreducible
 
@@ -163,3 +172,81 @@ unreported**. The deployment rule the paper should state: under a regime change 
 conformal interval preserves its coverage only by widening to the point of
 uselessness, so a regime-change detector is required before any number from this
 calibration is trusted.
+
+## F14 · The label-free selection criterion is algebraically equivalent to ordinary cross-validation
+
+Reviewer concern M12, tested under a fully nested protocol with identical folds
+(`criterion_vs_cv.csv`, 54 pairs, 810 cells):
+
+| criterion | Spearman vs truth (median) | normalised regret (median) | picks |
+|---|---|---|---|
+| pairwise difference | +0.705 | 0.106 | - |
+| plain 5-fold CV | +0.707 | 0.106 | - |
+| **same candidate picked** | - | - | **54/54 = 1.000** |
+
+They are the same estimator up to a constant. **The criterion must not be presented
+as a novel algorithmic contribution**; its legitimate value is limited to (i) being a
+practical, verified rule and (ii) applying uniformly to operator hyper-parameters,
+source-instrument choice, and fusion weights.
+
+## F15 · Protocol upgrade: jackknife+ replaces the split, and beats it
+
+E3, identical data and point predictions, six protocols, 54 pairs / 2916 cells:
+
+| protocol | coverage | width | with respect to pooled | effective n_cal |
+|---|---|---|---|---|
+| pooled | 0.838 | 3.80 | 1.00 | 37 |
+| split | 0.928 | 7.50 | 1.97 | 18 |
+| cv+ | 0.932 | 5.49 | 1.44 | 37 |
+| **jackknife+** | **0.926** | **5.32** | **1.40** | 37 |
+| 2-fold swapped | 0.950 | 6.45 | 1.70 | 37 |
+| Mondrian | 0.932 | 5.49 | 1.44 | 37 |
+
+- pooled is uniquely bad (45.5% of cells under-cover); every out-of-fold protocol
+  reaches approximately nominal coverage.
+- split is **not** the best replacement: it halves the effective calibration set and
+  is therefore the widest workable protocol.
+- **jackknife+ matches split's coverage with 29% narrower intervals and uses all
+  standards.** This becomes the recommended protocol.
+- Mondrian equals cv+ exactly, because the three analytes' residual distributions are
+  similar - stratifying by analyte buys nothing here (report as a negative result).
+
+## F16 · DECISIVE NEGATIVE RESULT: transfer does not beat simply calibrating locally on the same standards
+
+The original comparison table omitted the strongest legitimate competitor. The
+standardization samples exist on the TARGET instrument and their reference values are
+already known, so one can simply train a local PLS on them - no new reference
+analytics, and no source instrument at all.
+
+Median ratio to a full local calibration (162 pair x analyte cells, 6 draws):
+
+| n_std | SMART (transfer) | **B1 local PLS on the standards** | B2 augmented PLS | SMART beats B1 |
+|---|---|---|---|---|
+| 8 | 2.158 | 2.130 | **1.635** | 49.8% |
+| 12 | 1.801 | 1.776 | **1.466** | 52.9% |
+| 20 | 1.535 | **1.320** | 1.313 | 40.5% |
+| 30 | 1.387 | **1.160** | 1.234 | 36.9% |
+
+- At n <= 12, transfer ties local PLS, and **augmented PLS (source + standards) is
+  clearly better**.
+- At n >= 20, **local PLS wins outright** (transfer wins only 36.9-40.5% of cells).
+- Across all tested n, 80.9% of pair-analytes never see transfer beat B1.
+- Per analyte: transfer helps only glucose at n<=12 and acetate at n=12-30; it is
+  consistently worse for magnesium sulfate.
+
+**The comparison is conservative in transfer's favour**: SMART uses strictly MORE
+information (n target spectra + n paired source spectra + the whole source training
+set) than B1 (n target spectra + their labels), and still loses.
+
+**What this invalidates:** the economic argument ("a new instrument requires dozens of
+reference assays") - because the standards *are* reference assays. If n assays are
+going to be done anyway, calibrate locally with them.
+
+**What survives:** the interval protocol finding (F15) is independent of whether
+transfer is worth doing - any calibration, including B1, needs a valid uncertainty
+statement. Pooled calibration certifies optimism; jackknife+ certifies honestly and
+is the narrowest valid option.
+
+**Required repositioning:** the paper can no longer be "transfer beats local
+calibration". It must become "when transfer is used, how to certify its uncertainty -
+and the crossover analysis that says when transfer is not worth it at all".

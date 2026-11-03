@@ -66,7 +66,20 @@ def run(seeds=(0, 1, 2), min_std=20):
                     half = (iv[:, :, 1] - iv[:, :, 0]) / 2
                     err = np.abs(p - Yte)
                     for j, lab in enumerate(td.LABELS):
-                        if np.std(half[:, j]) < 1e-12:
+                        # A fixed-width interval has zero width variance, so its
+                        # width-error correlation is undefined. Record that fact
+                        # explicitly (NaN) instead of silently dropping the cell -
+                        # an empty CSV previously hid this.
+                        degenerate = bool(np.std(half[:, j]) < 1e-12)
+                        if degenerate:
+                            rows.append({
+                                "source": a, "target": b, "seed": seed,
+                                "method": nm, "analyte": lab,
+                                "spearman_width_vs_error": np.nan,
+                                "mean_halfwidth": float(np.mean(half[:, j])),
+                                "mean_abs_error": float(np.mean(err[:, j])),
+                                "constant_width": True,
+                            })
                             continue
                         rows.append({
                             "source": a, "target": b, "seed": seed,
@@ -76,6 +89,7 @@ def run(seeds=(0, 1, 2), min_std=20):
                                     pd.Series(err[:, j]), method="spearman")),
                             "mean_halfwidth": float(np.mean(half[:, j])),
                             "mean_abs_error": float(np.mean(err[:, j])),
+                            "constant_width": False,
                         })
     df = pd.DataFrame(rows)
     os.makedirs(OUT, exist_ok=True)
