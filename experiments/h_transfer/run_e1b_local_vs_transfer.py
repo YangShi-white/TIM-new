@@ -67,6 +67,38 @@ def local_pls_jackknife(Xt_std, Ys_std):
     return model, q
 
 
+def _transfer_jackknife(Xs, Ys, Xt_std, Xs_std, Ys_std, Xte, nc=8, ridge=1e-2):
+    """Transfer operator + affine, with leave-one-standard-out conformal widths -
+    exactly the interval style B1+jackknife+ gets, so the two are comparable."""
+    n = len(Xt_std)
+    F = fit_operator(Xt_std, Xs_std, ridge)
+    mdl = PLSRegression(n_components=nc, scale=False).fit(Xs, Ys)
+    pf = mdl.predict(Xt_std @ F)
+    aff = np.array([_affine(pf[:, j], Ys_std[:, j]) for j in range(Ys_std.shape[1])])
+
+    def apply(X, Fm=None, mm=None, am=None):
+        Fx = F if Fm is None else Fm
+        mx = mdl if mm is None else mm
+        ax = aff if am is None else am
+        p = mx.predict(X @ Fx)
+        return np.stack([ax[j, 0] * p[:, j] + ax[j, 1] for j in range(p.shape[1])], axis=1)
+
+    loo = np.full((n, Ys_std.shape[1]), np.nan)
+    for i in range(n):
+        kk = np.setdiff1d(np.arange(n), [i])
+        if len(kk) < 8:
+            continue
+        Fi = fit_operator(Xt_std[kk], Xs_std[kk], ridge)
+        pfi = mdl.predict(Xt_std[kk] @ Fi)
+        ai = np.array([_affine(pfi[:, j], Ys_std[kk][:, j]) for j in range(Ys_std.shape[1])])
+        loo[i] = apply(Xt_std[i:i + 1], Fi, mdl, ai)[0]
+    g = ~np.isnan(loo).any(axis=1)
+    r = np.abs(loo[g] - Ys_std[g])
+    q = np.array([_q(r[:, j], ALPHA) for j in range(Ys_std.shape[1])])
+    p = apply(Xte)
+    return p, np.stack([p - q, p + q], axis=-1)
+
+
 def run(seeds=(0, 1, 2), min_std=20):
     data = td.load_all()
     names = list(data)
@@ -136,11 +168,13 @@ def run(seeds=(0, 1, 2), min_std=20):
                         except Exception:  # noqa: BLE001
                             pass
 
-                        # SMART with the same jackknife-style treatment (split as before)
+                        # Transfer with the SAME interval style as B1+jackknife+, and
+                        # fixed hyper-parameters: this comparison is about the interval
+                        # layer and the transfer-vs-local question, not about the
+                        # hyper-parameter search (which E12 showed equals plain CV).
                         try:
-                            m4 = SMART(alpha=ALPHA, seed=rep, interval_mode="split").fit(
-                                Xs, Ys, Xt_s, src.X[ia2[sel]], Ys_s)
-                            p4, iv4 = m4.predict(Xte)
+                            p4, iv4 = _transfer_jackknife(
+                                Xs, Ys, Xt_s, src.X[ia2[sel]], Ys_s, Xte)
                             rec("SMART", p4, iv4)
                         except Exception:  # noqa: BLE001
                             pass

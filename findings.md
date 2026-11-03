@@ -250,3 +250,26 @@ is the narrowest valid option.
 **Required repositioning:** the paper can no longer be "transfer beats local
 calibration". It must become "when transfer is used, how to certify its uncertainty -
 and the crossover analysis that says when transfer is not worth it at all".
+
+**E1b — the transfer has no advantage on either axis.** Giving the local model the same
+jackknife+ conformal layer (23292 cells, identical draws, identical interval style):
+
+| n_std | accuracy: B1+jack | accuracy: transfer | coverage: B1+jack | coverage: transfer | width: B1+jack | width: transfer |
+|---|---|---|---|---|---|---|
+| 8 | 2.050 | 2.033 | 0.877 | 1.000* | 8.03 | **infinite*** |
+| 12 | **1.715** | 1.786 | 0.907 | 0.916 | **7.24** | 8.08 |
+| 20 | **1.302** | 1.537 | **0.945** | 0.944 | **6.27** | 7.69 |
+| 30 | **1.166** | 1.443 | **0.925** | 0.921 | **4.20** | 5.38 |
+
+\* at n=8 the split interval degenerates: after halving, m=4, so the conformal
+quantile is unbounded and every transfer interval is infinite, while the local
+model still returns a finite interval.
+
+Per-cell, at n=30: the local model is more accurate in 64.2% of cells, has coverage
+no worse in 77.6%, and **is both more accurate AND at least as well covered in 52.8%**.
+
+**Verdict: in this setting the transfer has no advantage on accuracy, coverage, or
+width.** The transfer claim must be withdrawn entirely. What survives is the
+uncertainty-protocol study (F15), which applies to the local calibration just as
+much - and is arguably more useful there, since local calibration is what a
+laboratory would actually do.

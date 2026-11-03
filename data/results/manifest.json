@@ -2,352 +2,91 @@
  "results": [
   {
    "file": "ablation.csv",
-   "rows": 2916,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "variant",
-    "analyte",
-    "ratio",
-    "coverage",
-    "width"
-   ],
-   "sha256": "f7034c3691c44463"
+   "rows": 2916
   },
   {
    "file": "adaptive_intervals.csv",
-   "rows": 1458,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "mode",
-    "analyte",
-    "coverage",
-    "halfwidth",
-    "spearman_width_error",
-    "width_cv"
-   ],
-   "sha256": "4189a79552247d5c"
+   "rows": 1458
   },
   {
    "file": "batch_holdout.csv",
-   "rows": 15,
-   "columns": [
-    "held_out_batch",
-    "analyte",
-    "n_test",
-    "rmse",
-    "bias",
-    "y_std",
-    "rel_rmse",
-    "coverage",
-    "halfwidth"
-   ],
-   "sha256": "cd734b938e2f35f2"
+   "rows": 15
   },
   {
    "file": "broth_validation.csv",
-   "rows": 12,
-   "columns": [
-    "target",
-    "analyte",
-    "mapped_to",
-    "approx_mapping",
-    "stage",
-    "k_cal",
-    "n",
-    "pearson_r",
-    "spearman_r",
-    "pearson_r_test",
-    "rmse_cal",
-    "rel_rmse"
-   ],
-   "sha256": "b3ce1b121ec0953e"
+   "rows": 12
   },
   {
    "file": "conformal_alpha0.1.csv",
-   "rows": 1458,
-   "columns": [
-    "source",
-    "target",
-    "mode",
-    "analyte",
-    "seed",
-    "alpha",
-    "n_std",
-    "coverage",
-    "width",
-    "rmse",
-    "mae",
-    "n_test"
-   ],
-   "sha256": "f80300401ffbfa55"
+   "rows": 1458
   },
   {
    "file": "criterion_vs_cv.csv",
-   "rows": 810,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "nc",
-    "ridge",
-    "crit_pair",
-    "crit_cv",
-    "true_ratio"
-   ],
-   "sha256": "7f5a22f4b73f20ef"
+   "rows": 810
   },
   {
    "file": "distortion_structure.csv",
-   "rows": 56,
-   "columns": [
-    "source",
-    "target",
-    "n_paired",
-    "frac_const_offset",
-    "k1",
-    "k2",
-    "k3",
-    "k5",
-    "k10",
-    "mean_spectrum_corr",
-    "design_share_of_D",
-    "k3_resid",
-    "k10_resid",
-    "k3_source_spectra"
-   ],
-   "sha256": "a4d1ffd9606ab3b9"
+   "rows": 56
   },
   {
    "file": "e1_baselines.csv",
-   "rows": 46584,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "method",
-    "analyte",
-    "n_std",
-    "rmse",
-    "local_rmse",
-    "ratio",
-    "n_test",
-    "coverage",
-    "width"
-   ],
-   "sha256": "55a0718403b93737"
+   "rows": 46584
   },
   {
    "file": "e1_crossover.csv",
-   "rows": 162,
-   "columns": [
-    "pair_analyte",
-    "n_crossover",
-    "smart_wins_at_all_n"
-   ],
-   "sha256": "2e7909599839ded5"
+   "rows": 162
+  },
+  {
+   "file": "e1b_local_vs_transfer.csv",
+   "rows": 23292
   },
   {
    "file": "e3_protocols.csv",
-   "rows": 2916,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "protocol",
-    "analyte",
-    "n_std",
-    "n_cal",
-    "rmse",
-    "ratio",
-    "coverage",
-    "width",
-    "infinite"
-   ],
-   "sha256": "6d1ee2831e0aa8c9"
+   "rows": 2916
   },
   {
    "file": "headtohead.csv",
-   "rows": 2304,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "method",
-    "analyte",
-    "rmse",
-    "local_rmse",
-    "ratio",
-    "n_std",
-    "n_test",
-    "coverage",
-    "width"
-   ],
-   "sha256": "c3289fc890849ea3"
+   "rows": 2304
   },
   {
    "file": "loio_v1.csv",
-   "rows": 648,
-   "columns": [
-    "source",
-    "target",
-    "method",
-    "analyte",
-    "n_std",
-    "n_test",
-    "rmse",
-    "mae",
-    "r2",
-    "bias",
-    "rmse_ratio_local",
-    "sec"
-   ],
-   "sha256": "f5c7641a1217e576"
+   "rows": 648
   },
   {
    "file": "loio_v2.csv",
-   "rows": 672,
-   "columns": [
-    "source",
-    "target",
-    "method",
-    "analyte",
-    "n_std",
-    "n_test",
-    "rmse",
-    "mae",
-    "r2",
-    "bias",
-    "rmse_ratio_local",
-    "sec"
-   ],
-   "sha256": "2218d77f286653a5"
+   "rows": 672
   },
   {
    "file": "loio_v3.csv",
-   "rows": 672,
-   "columns": [
-    "source",
-    "target",
-    "method",
-    "analyte",
-    "n_std",
-    "n_test",
-    "rmse",
-    "mae",
-    "r2",
-    "bias",
-    "rmse_ratio_local",
-    "sec"
-   ],
-   "sha256": "5e31853be9600c4d"
+   "rows": 672
   },
   {
    "file": "multisource_fusion.csv",
-   "rows": 288,
-   "columns": [
-    "target",
-    "seed",
-    "method",
-    "analyte",
-    "ratio",
-    "n_sources",
-    "sources"
-   ],
-   "sha256": "86f7bcb971ab5e32"
+   "rows": 288
   },
   {
    "file": "selection_validity.csv",
-   "rows": 2430,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "nc",
-    "ridge",
-    "criterion",
-    "true_ratio"
-   ],
-   "sha256": "35e9d42fda8b6e1a"
+   "rows": 2430
   },
   {
    "file": "selfassess_reconciliation.csv",
-   "rows": 168,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "e_in",
-    "e_out",
-    "e_loc",
-    "ratio_in",
-    "ratio_out"
-   ],
-   "sha256": "7584bc6fd379f352"
+   "rows": 168
   },
   {
    "file": "selfassessment.csv",
-   "rows": 288,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "analyte",
-    "e_in",
-    "e_out",
-    "e_local",
-    "ratio_in",
-    "ratio_out",
-    "understate_factor"
-   ],
-   "sha256": "f32f891ce9c4fefe"
+   "rows": 288
   },
   {
    "file": "significance_coverage.csv",
-   "rows": 8,
-   "columns": [
-    "method",
-    "analyte",
-    "n",
-    "mean_gain",
-    "p_wilcoxon",
-    "ci_lo",
-    "ci_hi"
-   ],
-   "sha256": "df5a9ac4a9bfd544"
+   "rows": 8
   },
   {
    "file": "significance_ratio.csv",
-   "rows": 16,
-   "columns": [
-    "competitor",
-    "analyte",
-    "n",
-    "mean_diff",
-    "median_diff",
-    "p_wilcoxon",
-    "ci_lo",
-    "ci_hi"
-   ],
-   "sha256": "329ee3ac47f27be6"
+   "rows": 16
   },
   {
    "file": "std_size_curve.csv",
-   "rows": 4494,
-   "columns": [
-    "source",
-    "target",
-    "seed",
-    "n_std",
-    "analyte",
-    "rmse",
-    "local_rmse",
-    "ratio"
-   ],
-   "sha256": "ac504249868581cc"
+   "rows": 4494
   }
  ]
 }
