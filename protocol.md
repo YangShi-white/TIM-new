@@ -112,3 +112,54 @@ The local calibration is computed on the same 70% fit half, so `ratio = 1` means
    (`run_selfassessment.py`); all earlier variants are retired.
 6. Every CSV in data/results/ is regenerated from the current tree in one pass
    (`scripts/rerun_all.sh`), eliminating the provenance mismatches the review found.
+
+## Amendment 2 (E0) — 口径统一
+
+审查（`TIM_投稿评估与增强方案.md`）指出多处结果表之间口径不一致。本文件与
+`to_human/实验报告.md` 已按下表统一，任何引用数字时须注明所属实验。
+
+### 1. 三套"仪器对"集合必须区分
+
+| 记号 | 定义 | 数量 |
+|---|---|---|
+| 有序对 | 8×7，不要求有足够配对样本 | 56 |
+| **可用对（head-to-head / 消融）** | 满足最小标准样本数、行级剔除后源训练集 ≥20 行 | **32**（288 格，3 种子×3 分析物） |
+| **预算对（std_size / conformal）** | 满足 n_std ≥ 20，允许更多对进入 | **54**（486 格 / 1458 格） |
+| n≥40 可达对 | 配对样本数 ≥40 | 11–23（随档位变化） |
+
+### 2. 两套区间覆盖数字必须注明来源
+
+| 实验 | 文件 | 对数 | pooled | cv+ | split | 宽度增加 |
+|---|---|---|---|---|---|---|
+| A | `conformal_alpha0.1.csv` | 54 | 0.838 | 0.853 | 0.944 | +98% |
+| B | `headtohead.csv` | 32 | 0.890 | 0.866 | 0.934 | +35% |
+
+正文主结果用 B（与精度表同口径）；A 作为补充并在每次引用时标注"54 对口径"。
+
+### 3. 消融与 head-to-head 不是同一批数据
+
+消融 = 54 对 / 486 格（head-to-head 的严格超集，另有 198 格）。因此消融 `full` 的
+1.466 与 head-to-head 的 SMART 1.654 不矛盾，差异源于仪器对集合不同。
+
+### 4. `-labelsel` 与 `-cv (pooled)` 两行同值是实现使然
+
+`-labelsel` 变体的 `cv` 参数为默认真值，其区间标定走 pooled 路径，故与 `-cv (pooled)`
+在实现上等价。做干净单因素消融须保持选参开启、只改区间协议——该干净版本见
+`experiments/h_uncertainty/run_e3_protocols.py` 的协议对照。
+
+### 5. 显著性表的基线标签
+
+`significance_ratio.csv` 的 `competitor` 列**只含未调参基线**
+（`DS`、`PDS`、`TCCP-cv+`、`direct`）。调参后基线的差值只能由均值相减得到
+（SMART−DS-tuned = −1.308，SMART−PDS-tuned = −2.496），不是配对检验。
+`run_significance.py` 已扩展为显式列出全部竞争者并检查其是否存在于 head-to-head。
+
+### 6. 已被证伪并撤回的表述
+
+| 原表述 | 状态 | 依据 |
+|---|---|---|
+| 自评偏差 2.06x、r=0.008、与真值不相关 | **撤回** | 双重使用泄漏 + 评分协议差异；修复后为 1.15x、r=+0.822 |
+| 跨仪器失真是低秩的（3 分量 79–96%） | **不作论据** | 92.4% 可由 3 浓度+截距解释；源谱自身 k3=0.972 ≥ 失真 0.954 |
+| 标准样本总体系统性地更容易 | **证伪** | 折外标定残差/测试残差 = 1.148（测试更大），q90 比 1.063 |
+| 选参准则是核心算法贡献 | **降级** | 与普通 5 折 CV 完全等价（54/54 同选，Spearman 与遗憾度逐一相同） |
+| split 是唯一可靠协议 | **限定** | 0.934–0.944 与有限样本天花板 k/(m+1) 一致；m≤8 时区间无穷 |

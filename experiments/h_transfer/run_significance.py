@@ -39,10 +39,20 @@ def main():
     d["pair"] = d["source"] + "->" + d["target"]
     out_rows = []
 
+    # Competitors are listed explicitly and MUST match the method labels actually
+    # present in headtohead.csv. An earlier version hard-coded ["DS", "PDS", ...]
+    # while the report labelled those rows "DS-tuned"/"PDS-tuned", which produced a
+    # numbers-vs-labels mismatch (a data-consistency defect caught in review).
+    competitors = ["direct", "PDS", "PDS-tuned", "DS", "DS-tuned", "TCCP-cv+"]
     print("=" * 78)
     print("PAIRED COMPARISON OF ERROR RATIO (SMART vs each competitor)")
     print("=" * 78)
-    for comp in ["DS", "PDS", "TCCP-cv+", "direct"]:
+    missing = [c for c in competitors if c not in set(d["method"])]
+    if missing:
+        print(f"WARNING: competitors absent from headtohead.csv: {missing}")
+    for comp in competitors:
+        if comp not in set(d["method"]):
+            continue
         for lab in ["all"] + sorted(d["analyte"].unique()):
             a = d[(d["method"] == "SMART") & ((d["analyte"] == lab) | (lab == "all"))]
             b = d[(d["method"] == comp) & ((d["analyte"] == lab) | (lab == "all"))]
