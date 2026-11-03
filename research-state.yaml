@@ -1,0 +1,41 @@
+# Research State
+
+## Project
+Zero-reference calibration transfer for Raman bioprocess analyzers, with
+distribution-free measurement-uncertainty guarantees. Target venue: IEEE TIM.
+
+## Target claims
+1. A chemometric soft sensor calibrated on instrument A can be deployed on instrument B
+   with **zero new reference-analytics measurements** at B, using only paired unlabeled
+   standardization samples.
+2. The transfer produces **prediction intervals with validated coverage** — a measurement
+   uncertainty budget rather than a bare RMSE — including under the instrument-response
+   shift, where naive conformal invalidates.
+
+## Why this is not the 2025 SAA paper
+Lange et al. (Spectrochim. Acta A 334:125861, 2025) trained one CNN jointly on **all 8**
+instruments — i.e. they assume labeled data exists for every instrument. That removes the
+deployment cost the method is meant to avoid. Our setting forbids target labels entirely.
+
+## Data (all CC-BY-4.0, downloaded)
+- 8 instruments x (glucose, acetate, MgSO4), 1941 spectra, grids 486–5472 pts,
+  0.3–3.47 cm⁻¹ step, ranges 1941–3500 cm⁻¹, 532 and 785 nm excitation.
+- Overlapping physical samples across instruments → paired unlabeled standardization set.
+- Real E. coli fed-batch (TG-Raman + Kaiser) and S. thermophilus runs → external
+  validation against an **independent reference method** (enzymatic/HPLC vs Cedex BioHT).
+- SubstrateMixRaman: 4849 spectra x 8 metabolites, decorrelated → unlabeled pretraining pool.
+
+## Hypotheses
+- H1 Naive transfer collapses (measured: R² down to -10³). Baseline confirmed.
+- H2 A physically structured instrument-response model fits from paired unlabeled data
+  and recovers accuracy close to in-instrument calibration.
+- H3 Source-instrument residuals underestimate target error; shift-aware conformal
+  restores nominal coverage where vanilla conformal fails.
+
+## Status
+- [x] Bootstrap, data acquisition, baseline PLS, transfer-collapse measurement
+- [ ] Unified loader + canonical grid
+- [ ] Baselines: PDS, DS, SBC, joint PLS/CNN
+- [ ] IRM + shift-aware conformal
+- [ ] LOIO evaluation, ablations
+- [ ] External validation on real runs

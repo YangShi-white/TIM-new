@@ -1,0 +1,38 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# ---- 环境 / 编辑器 ----
+.venv/
+venv/
+.env
+.env.*
+.idea/
+.vscode/
+*.swp
+
+# ---- 运行日志与临时产物 ----
+*.log
+data/log_*.txt
+data/_tmp_*.csv
+data/_report_numbers.txt
+data/rerun.log
+data/final_rerun.log
+
+# ---- 大体积原始数据 ----
+# 186 MB 公开数据集不进版本库：体积超出常规仓库限制，且可由
+# scripts/fetch_hf.py 与 scripts/fetch_broth.py 完整重下载（均为 CC-BY-4.0）。
+# 结果 CSV（data/results/）是论文全部数字的来源，必须入库。
+data/raw/
+
+# ---- 系统文件 ----
+.DS_Store
+Thumbs.db
+desktop.ini

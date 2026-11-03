@@ -1,0 +1,13 @@
+target,analyte,mapped_to,approx_mapping,stage,k_cal,n,pearson_r,spearman_r,pearson_r_test,rmse_cal,rel_rmse
+yeast_bioreactor,Glucose [mM],Glucose,False,direct,,60,0.9853569837500987,0.9814498471850797,,,
+yeast_bioreactor,Glucose [mM],Glucose,False,calibrated,6.0,60,,,0.9855604765485136,8.955970512796329,0.1922738305182239
+yeast_bioreactor,Glucose [mM],Glucose,False,calibrated,12.0,60,,,0.9853435715204717,8.585099024663702,0.18431166923694592
+yeast_bioreactor,Glucose [mM],Glucose,False,calibrated,20.0,60,,,0.9846464601720221,8.508082284841832,0.18265821319235329
+ecoli,Glucose,Glucose,False,direct,,373,0.766167383645482,0.7666934979381098,,,
+ecoli,Glucose,Glucose,False,calibrated,6.0,373,,,0.5100212517745831,1.0910566669981236,0.8302973503757113
+ecoli,Glucose,Glucose,False,calibrated,12.0,373,,,0.7654251462223988,0.8910774006662772,0.6781125372603203
+ecoli,Glucose,Glucose,False,calibrated,20.0,373,,,0.7651781223839046,0.889847474044715,0.6771765594638147
+ecoli,Acetate,Acetate,False,direct,,379,0.31401368697799475,0.38662807889033135,,,
+ecoli,Acetate,Acetate,False,calibrated,6.0,379,,,0.09985484565725117,0.2961833159912455,1.112935843767681
+ecoli,Acetate,Acetate,False,calibrated,12.0,379,,,0.09604954736697595,0.2769963618086704,1.0408391121504712
+ecoli,Acetate,Acetate,False,calibrated,20.0,379,,,0.31219508093144405,0.26880162016985537,1.0100466224731584
